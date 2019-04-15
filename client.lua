@@ -56,7 +56,7 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        while myworld ~= 0 then
+        while myworld ~= 0 do
             SetPedDensityMultiplierThisFrame(0)
             SetScenarioPedDensityMultiplierThisFrame(0, 0)
             SetParkedVehicleDensityMultiplierThisFrame(0)
