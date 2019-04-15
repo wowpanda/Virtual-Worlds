@@ -1,3 +1,22 @@
+RegisterCommand('vw', function(source, args)
+    SetEntityVirtualWorld(PlayerPedId(), tonumber(args[1]))
+end, false)
+
+RegisterCommand('vwcar', function() 
+    local temp = RequestModel('faggio')
+    while not HasModelLoaded(temp) do
+        Wait(20)
+    end
+    local pos = GetEntityCoords(PlayerPedId())
+    local tempcar = CreateVehicle(GetHashKey('faggio'), pos.x, pos.y, pos.z, 0, false, false)
+    SetModelAsNoLongerNeeded(temp)
+    SetEntityVirtualWorld(tempcar, 69)
+end, false)
+
+RegisterCommand('myvw', function() 
+    print(GetEntityVirtualWorld(PlayerPedId()))
+end, false)
+
 --za warudo
 local MaxPlayers = 255
 local virtualworlds = {}
@@ -12,11 +31,10 @@ function GetEntityVirtualWorld(entity)
         for g,w in pairs(virtualworlds[k]) do
             if w.entity == entity then
                 return k
-            else
-                return 0
             end
         end
     end
+    return 0
 end
 
 
@@ -37,17 +55,27 @@ AddEventHandler('SetEntityVirtualWorld', function(vwtable, entity, worldid)
                 return
             end
 
-            if GetEntityVirtualWorld(playerPed) ~= worldid then
+            if GetEntityVirtualWorld(playerPed) ~= GetEntityVirtualWorld(entity) and (entity ~= playerPed) then
                 SetEntityVisible(entity, false, 0)
-                SetEntityCollision(entity, false, false)
-                SetEntityNoCollisionEntity(playerPed, entity, true)
-                SetEntityNoCollisionEntity(entity, playerPed, true)
+                FreezeEntityPosition(entity, true)
+                SetEntityCollision(entity, false, true)
             end
 
-            if GetEntityVirtualWorld(playerPed) == worldid then
+            if GetEntityVirtualWorld(playerPed) == GetEntityVirtualWorld(entity) then
                 for k,v in pairs(virtualworlds[worldid]) do
-                    SetEntityVisible(v.entity, true, 0)
+                    SetEntityVisible(v.entity, true, true)
+                    FreezeEntityPosition(v.entity, false)
                     SetEntityCollision(v.entity, true, true)
+                end
+            end
+            
+            for k,v in pairs(virtualworlds) do
+                for g,w in pairs(virtualworlds[k]) do
+                    if (GetEntityVirtualWorld(playerPed) ~= GetEntityVirtualWorld(w.entity)) and (w.entity ~= playerPed) then
+                        SetEntityVisible(w.entity, false, 0)
+                        FreezeEntityPosition(w.entity, true)
+                        SetEntityCollision(w.entity, false, true)
+                    end
                 end
             end
         end
