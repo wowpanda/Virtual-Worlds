@@ -1,22 +1,3 @@
-RegisterCommand('vw', function(source, args)
-    SetEntityVirtualWorld(PlayerPedId(), tonumber(args[1]))
-end, false)
-
-RegisterCommand('vwcar', function() 
-    local temp = RequestModel('faggio')
-    while not HasModelLoaded(temp) do
-        Wait(20)
-    end
-    local pos = GetEntityCoords(PlayerPedId())
-    local tempcar = CreateVehicle(GetHashKey('faggio'), pos.x, pos.y, pos.z, 0, false, false)
-    SetModelAsNoLongerNeeded(temp)
-    SetEntityVirtualWorld(tempcar, 69)
-end, false)
-
-RegisterCommand('myvw', function() 
-    print(GetEntityVirtualWorld(PlayerPedId()))
-end, false)
-
 --za warudo
 local MaxPlayers = 255
 local virtualworlds = {}
